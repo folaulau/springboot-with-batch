@@ -36,7 +36,6 @@ import javax.sql.DataSource;
 
 @Slf4j
 @Configuration
-@EnableTransactionManagement
 //@EnableBatchProcessing
 public class BatchConfig {
 
