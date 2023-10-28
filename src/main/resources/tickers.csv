@@ -1,0 +1,6 @@
+ID,Type,Ticker,Name,Categories,Description
+1,STOCK,TSLA,Tesla,tech,
+2,STOCK,META,Facebook,tech,
+3,STOCK,SBUX,Starbucks,fastfood|restaurant,
+4,STOCK,NVDA,Nvidia,tech|ai,
+5,STOCK,QQQ,Invest QQQ,tech,
