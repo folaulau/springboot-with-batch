@@ -106,6 +106,7 @@ public class BatchConfig {
         return new StepBuilder("loadSecurities", jobRepository).<Security, Security>chunk(1, transactionManager)
                 .reader(tickerFileItemReader)
                 .processor(processTickers)
+                .transactionManager(transactionManager)
                 .writer(securityItemWriter)
                 .faultTolerant().skipPolicy(new SkipPolicy() {
                     @Override

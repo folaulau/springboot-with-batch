@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -59,11 +60,11 @@ public class AppConfig {
         return hds;
     }
 
-//    @Bean
+    //    @Bean
 //    public JdbcTransactionManager transactionManager(DataSource dataSource) {
 //        return new JdbcTransactionManager(dataSource);
 //    }
-
+    @Primary
     @Bean
     public DataSourceTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
