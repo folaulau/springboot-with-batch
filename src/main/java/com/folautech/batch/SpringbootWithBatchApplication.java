@@ -1,5 +1,16 @@
 package com.folautech.batch;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,12 +25,20 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.TimeZone;
 
+@Slf4j
 @SpringBootApplication
-public class SpringbootWithBatchApplication {
+public class SpringbootWithBatchApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootWithBatchApplication.class, args);
 	}
+
+	@Autowired
+	private JobLauncher jobLauncher;
+
+	@Autowired
+	@Qualifier("loadTickers")
+	private Job loadTickers;
 
 	@Order(Integer.MAX_VALUE)
 	@Bean
@@ -70,5 +89,19 @@ public class SpringbootWithBatchApplication {
 			}
 			System.out.println("\n");
 		};
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+
+//		JobParameters jobParameters = new JobParametersBuilder().addLong("time", System.currentTimeMillis()).addString("accessToken", "test-accessToken").toJobParameters();
+//
+//		try {
+//			jobLauncher.run(loadTickers, jobParameters);
+//		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException |
+//				 JobParametersInvalidException e) {
+//			log.warn("Exception ,msg={}",e.getMessage());
+//			e.printStackTrace();
+//		}
 	}
 }
