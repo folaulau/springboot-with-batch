@@ -1,6 +1,9 @@
 package com.folautech.batch;
 
+import com.folautech.batch.entity.User;
+import com.folautech.batch.entity.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -39,6 +42,9 @@ public class SpringbootWithBatchApplication implements CommandLineRunner {
 	@Autowired
 	@Qualifier("loadTickers")
 	private Job loadTickers;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@Order(Integer.MAX_VALUE)
 	@Bean
@@ -103,5 +109,21 @@ public class SpringbootWithBatchApplication implements CommandLineRunner {
 //			log.warn("Exception ,msg={}",e.getMessage());
 //			e.printStackTrace();
 //		}
+
+		 Faker faker = new Faker();
+
+		for (int i = 1; i <= 10; i++) {
+			String firstName = faker.name().firstName();
+			String lastName = faker.name().lastName();
+			String email = (firstName+lastName).toLowerCase()+"@gmail.com";
+			User user = User.builder()
+					.id((long)i)
+					.firstName(firstName)
+					.lastName(lastName)
+					.email(email)
+					.build();
+			userRepository.saveAndFlush(user);
+		}
+
 	}
 }

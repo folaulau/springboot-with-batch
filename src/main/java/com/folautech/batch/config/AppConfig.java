@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@EnableTransactionManagement
+//@EnableTransactionManagement
 @Slf4j
 @Configuration
 public class AppConfig {
@@ -66,11 +66,11 @@ public class AppConfig {
 //    public JdbcTransactionManager transactionManager(DataSource dataSource) {
 //        return new JdbcTransactionManager(dataSource);
 //    }
-    @Primary
-    @Bean
-    public DataSourceTransactionManager transactionManager(DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
+//    @Primary
+//    @Bean
+//    public DataSourceTransactionManager transactionManager(DataSource dataSource) {
+//        return new DataSourceTransactionManager(dataSource);
+//    }
 
 //    @Bean
 //    public BatchConfigurer configurer(@Qualifier("dataSource") DataSource dataSource){

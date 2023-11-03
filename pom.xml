@@ -57,6 +57,20 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://www.datafaker.net/documentation/getting-started/ -->
+        <dependency>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+
+        <!-- https://github.com/DiUS/java-faker -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
         <!-- Swagger -->
         <dependency>
             <groupId>org.springdoc</groupId>
