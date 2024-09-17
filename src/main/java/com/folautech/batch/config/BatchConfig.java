@@ -36,17 +36,7 @@ import javax.sql.DataSource;
 
 @Slf4j
 @Configuration
-//@EnableBatchProcessing
 public class BatchConfig {
-
-//    @Autowired
-//    private SecurityDAO securityDAO;
-//
-//    @Autowired SecurityRepository securityRepository;
-
-//    @Autowired
-//    @Qualifier("processStocks")
-//    private ItemProcessor<Security, Transaction> processStocks;
 
     @Bean(name = "loadTickers")
     public Job job(JobRepository jobRepository, @Qualifier("loadSecurities") Step loadSecurities) {
@@ -58,7 +48,6 @@ public class BatchConfig {
     }
 
     @Bean(name = "tickerFileItemReader")
-//    @JobScope
     public FlatFileItemReader<Security> tickerFileItemReader() {
         log.info("tickerFileItemReader...");
         return new FlatFileItemReaderBuilder<Security>().name("playerFileItemReader")
@@ -71,7 +60,6 @@ public class BatchConfig {
     }
 
     @Bean("processTickers")
-//    @JobScope
     public ItemProcessor<Security, Security> processTickers() {
         ItemProcessor<Security, Security> processor = new ItemProcessor<Security, Security>() {
 
@@ -85,7 +73,7 @@ public class BatchConfig {
         };
         return processor;
     }
-//
+
     @Bean
     public RepositoryItemWriter<Security> securityItemWriter(@Autowired SecurityRepository securityRepository) {
         log.info("securityItemWriter...");
