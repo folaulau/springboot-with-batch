@@ -49,6 +49,37 @@ public class PromotionBatchConfig {
                 .build();
     }
 
+    @Bean
+    public Step loadPromotions(JobRepository jobRepository, PlatformTransactionManager transactionManager,
+                               ItemReader<User> userPromotionItemReader,
+                               ItemProcessor<User, Promotion> promotionItemProcessor,
+                               ItemWriter<Promotion> promotionItemWriter) {
+        log.info("loadPromotions...");
+        return new StepBuilder("loadPromotions", jobRepository).<User, Promotion>chunk(2, transactionManager)
+                .reader(userPromotionItemReader)
+                .processor(promotionItemProcessor)
+                .transactionManager(transactionManager)
+                .writer(promotionItemWriter)
+                .faultTolerant().skipPolicy(new SkipPolicy() {
+                    @Override
+                    public boolean shouldSkip(Throwable t, long skipCount) throws SkipLimitExceededException {
+                        if (t instanceof DataIntegrityViolationException) {
+                            return true;
+                        }
+
+                        if (t instanceof InvalidDataAccessApiUsageException) {
+                            return true;
+                        }
+
+                        if (t instanceof RuntimeException) {
+                            return true;
+                        }
+                        return false;
+                    }
+                }).noRetry(DataIntegrityViolationException.class)
+                .build();
+    }
+
 //    @Bean(name = "tickerFileItemReader")
 ////    @JobScope
 //    public FlatFileItemReader<Security> tickerFileItemReader() {
@@ -87,35 +118,4 @@ public class PromotionBatchConfig {
 //
 //        return builder.build();
 //    }
-
-    @Bean
-    public Step loadPromotions(JobRepository jobRepository, PlatformTransactionManager transactionManager,
-                               ItemReader<User> userPromotionItemReader,
-                               ItemProcessor<User, Promotion> promotionItemProcessor,
-                               ItemWriter<Promotion> promotionItemWriter) {
-        log.info("loadPromotions...");
-        return new StepBuilder("loadPromotions", jobRepository).<User, Promotion>chunk(2, transactionManager)
-                .reader(userPromotionItemReader)
-                .processor(promotionItemProcessor)
-                .transactionManager(transactionManager)
-                .writer(promotionItemWriter)
-                .faultTolerant().skipPolicy(new SkipPolicy() {
-                    @Override
-                    public boolean shouldSkip(Throwable t, long skipCount) throws SkipLimitExceededException {
-                        if (t instanceof DataIntegrityViolationException) {
-                            return true;
-                        }
-
-                        if (t instanceof InvalidDataAccessApiUsageException) {
-                            return true;
-                        }
-
-                        if (t instanceof RuntimeException) {
-                            return true;
-                        }
-                        return false;
-                    }
-                }).noRetry(DataIntegrityViolationException.class)
-                .build();
-    }
 }
