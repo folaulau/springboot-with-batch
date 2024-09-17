@@ -112,7 +112,7 @@ public class SpringbootWithBatchApplication implements CommandLineRunner {
 
 		 Faker faker = new Faker();
 
-		for (int i = 1; i <= 10; i++) {
+		for (int i = 1; i <= 27; i++) {
 			String firstName = faker.name().firstName();
 			String lastName = faker.name().lastName();
 			String email = (firstName+lastName).toLowerCase()+"@gmail.com";

@@ -5,6 +5,8 @@ import com.folautech.batch.entity.PromotionDAO;
 import com.folautech.batch.entity.Security;
 import com.folautech.batch.entity.SecurityDAO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.annotation.AfterChunk;
+import org.springframework.batch.core.annotation.BeforeChunk;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,16 @@ public class PromotionItemWriter implements ItemWriter<Promotion> {
 
     @Autowired
     private PromotionDAO promotionDAO;
+
+    @BeforeChunk
+    public void beforeChunk(){
+        log.info("beforeChunk PromotionItemWriter ...");
+    }
+
+    @AfterChunk
+    public void afterChunk(){
+        log.info("afterChunk PromotionItemWriter ...");
+    }
 
     @Override
     public void write(Chunk<? extends Promotion> chunk) throws Exception {

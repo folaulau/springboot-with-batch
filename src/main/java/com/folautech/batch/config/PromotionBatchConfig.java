@@ -13,15 +13,9 @@ import org.springframework.batch.core.step.skip.SkipPolicy;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.data.RepositoryItemWriter;
-import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -30,6 +24,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 //@EnableBatchProcessing
 public class PromotionBatchConfig {
+
+    public static final int CHUNK_SIZE = 5;
 
 //    @Autowired
 //    private SecurityDAO securityDAO;
@@ -55,7 +51,7 @@ public class PromotionBatchConfig {
                                ItemProcessor<User, Promotion> promotionItemProcessor,
                                ItemWriter<Promotion> promotionItemWriter) {
         log.info("loadPromotions...");
-        return new StepBuilder("loadPromotions", jobRepository).<User, Promotion>chunk(2, transactionManager)
+        return new StepBuilder("loadPromotions", jobRepository).<User, Promotion> chunk(CHUNK_SIZE, transactionManager)
                 .reader(userPromotionItemReader)
                 .processor(promotionItemProcessor)
                 .transactionManager(transactionManager)

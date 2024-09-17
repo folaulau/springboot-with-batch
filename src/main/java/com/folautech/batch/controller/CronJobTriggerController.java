@@ -61,7 +61,9 @@ public class CronJobTriggerController {
                 e.printStackTrace();
             }
         } else if (job.equals(CronJobName.PROMOTIONS)) {
-            JobParameters jobParameters = new JobParametersBuilder().addLong("time", System.currentTimeMillis()).addString("uuid", UUID.randomUUID().toString()).toJobParameters();
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addLong("time", System.currentTimeMillis())
+                    .addString("uuid", UUID.randomUUID().toString()).toJobParameters();
 
             try {
                 jobLauncher.run(promotions, jobParameters);
