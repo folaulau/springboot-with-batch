@@ -1,4 +1,4 @@
-package com.folautech.batch.entity;
+package com.folautech.batch.entity.transaction;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

@@ -1,5 +1,7 @@
 package com.folautech.batch.writer;
 
+import com.folautech.batch.entity.notification.Notification;
+import com.folautech.batch.entity.notification.NotificationService;
 import com.folautech.batch.entity.promotion.Promotion;
 import com.folautech.batch.entity.promotion.PromotionDAO;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +14,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class PromotionItemWriter implements ItemWriter<Promotion> {
+public class NotificationItemWriter implements ItemWriter<Notification> {
 
     @Autowired
-    private PromotionDAO promotionDAO;
+    private NotificationService notificationService;
 
     @BeforeChunk
     public void beforeChunk(){
@@ -28,18 +30,17 @@ public class PromotionItemWriter implements ItemWriter<Promotion> {
     }
 
     @Override
-    public void write(Chunk<? extends Promotion> chunk) throws Exception {
-        log.info("\n\nsaving promotions...");
+    public void write(Chunk<? extends Notification> chunk) throws Exception {
+        log.info("\n\nsaving notifications...");
 
-        for (Promotion promotion : chunk.getItems()) {
+        for (Notification notification : chunk.getItems()) {
 
-            log.info("promotion={}", promotion);
+            log.info("notification={}", notification);
 
-            Promotion savedPromotion = promotionDAO.save(promotion);
+            notificationService.sendPromotionNotification(notification);
 
-            log.info("savedPromotion={}", savedPromotion);
         }
 
-        System.out.println("\ndone saving promotions!\n\n");
+        System.out.println("\ndone sending notification!\n\n");
     }
 }

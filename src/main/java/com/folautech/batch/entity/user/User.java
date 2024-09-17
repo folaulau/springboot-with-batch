@@ -1,4 +1,4 @@
-package com.folautech.batch.entity;
+package com.folautech.batch.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
@@ -10,7 +10,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -20,8 +19,8 @@ import java.time.LocalDateTime;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @DynamicUpdate
 @Entity
-@Table(name ="promotions")
-public class Promotion implements Serializable {
+@Table(name ="users")
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,23 +29,26 @@ public class Promotion implements Serializable {
     @Column(name = "id", nullable = false, updatable = false, unique = true)
     private Long id;
 
-    @Column(name = "current_salary")
-    private Double currentSalary;
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Column(name = "current_year")
-    private LocalDate currentYear;
+    @Column(name = "last_name")
+    private String lastName;
 
-    @Column(name = "new_year")
-    private LocalDate newYear;
+    @Column(name = "email")
+    private String email;
 
-    @Column(name = "new_salary")
-    private Double newSalary;
-
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "user_id",nullable = false)
-    private User user;
+    @Column(name = "promoted")
+    private Boolean promoted;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    private void preCreate(){
+        if(promoted == null){
+            promoted = false;
+        }
+    }
 }

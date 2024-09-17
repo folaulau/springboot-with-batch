@@ -1,5 +1,6 @@
 package com.folautech.batch.processor;
 
+import com.folautech.batch.entity.notification.Notification;
 import com.folautech.batch.entity.promotion.Promotion;
 import com.folautech.batch.entity.user.User;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 
 @Service
 @Slf4j
-public class PromotionItemProcessor implements ItemProcessor<User, Promotion> {
+public class NotificationItemProcessor implements ItemProcessor<Promotion, Notification> {
 
     @BeforeChunk
     public void beforeChunk(){
@@ -25,22 +26,12 @@ public class PromotionItemProcessor implements ItemProcessor<User, Promotion> {
     }
 
     @Override
-    public Promotion process(User user) throws Exception {
-        log.info("processing promotion, user={}\n\n", user.toString());
+    public Notification process(Promotion promotion) throws Exception {
+        log.info("processing promotion={}\n\n", promotion.toString());
 
-        if(!user.getPromoted()){
-            log.info("User is not promoted, skipping user: {}", user.getEmail());
-            return null;
-        }
-
-        log.info("User is promoted, creating promotion object for user: {}", user.getEmail());
-
-        return Promotion.builder()
-                .user(user)
-                .currentYear(LocalDate.now())
-                .newYear(LocalDate.now().plusYears(1))
-                .currentSalary(100000.0)
-                .newSalary(120000.0)
+        return Notification.builder()
+                .user(promotion.getUser())
+                .message("Congratulations! You have been promoted.")
                 .build();
     }
 }

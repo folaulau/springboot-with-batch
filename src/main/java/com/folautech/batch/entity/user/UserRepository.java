@@ -1,4 +1,4 @@
-package com.folautech.batch.entity;
+package com.folautech.batch.entity.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

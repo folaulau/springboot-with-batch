@@ -1,14 +1,12 @@
 package com.folautech.batch.reader;
 
 import com.folautech.batch.config.PromotionBatchConfig;
-import com.folautech.batch.entity.User;
-import com.folautech.batch.entity.UserRepository;
+import com.folautech.batch.entity.user.User;
+import com.folautech.batch.entity.user.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.AfterChunk;
 import org.springframework.batch.core.annotation.BeforeChunk;
-import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
@@ -21,11 +19,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
-import java.util.List;
+import java.util.Random;
 
 @Service
 @Slf4j
-public class UserPromotionItemReader implements ItemReader<User> {
+public class UserItemReader implements ItemReader<User> {
 
     @Autowired
     UserRepository userRepository;
@@ -33,9 +31,11 @@ public class UserPromotionItemReader implements ItemReader<User> {
     private Iterator<User> userIterator;
     private int pageSize = PromotionBatchConfig.CHUNK_SIZE;
     private int pageNumber = 0;
+    Random random = null;
 
     @PostConstruct
     public void init() {
+        random = new Random();
         log.info("UserPromotionItemReader initialized");
     }
 
@@ -64,6 +64,10 @@ public class UserPromotionItemReader implements ItemReader<User> {
         // Return the next user from the iterator
         if (userIterator.hasNext()) {
             User user = userIterator.next();
+
+            if(random.nextBoolean()){
+                user.setPromoted(true);
+            }
 
             log.info("User: {}", user);
 

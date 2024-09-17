@@ -1,8 +1,7 @@
 package com.folautech.batch.writer;
 
-import com.folautech.batch.entity.Security;
-import com.folautech.batch.entity.SecurityDAO;
-import com.folautech.batch.entity.SecurityRepository;
+import com.folautech.batch.entity.promotion.Security;
+import com.folautech.batch.entity.promotion.SecurityDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;

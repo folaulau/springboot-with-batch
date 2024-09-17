@@ -1,4 +1,4 @@
-package com.folautech.batch.entity;
+package com.folautech.batch.entity.transaction;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
