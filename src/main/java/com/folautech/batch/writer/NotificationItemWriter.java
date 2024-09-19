@@ -12,33 +12,27 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
-public class NotificationItemWriter implements ItemWriter<Notification> {
+public class NotificationItemWriter implements ItemWriter<List<Notification>> {
 
     @Autowired
     private NotificationService notificationService;
 
-    @BeforeChunk
-    public void beforeChunk(){
-        log.info("beforeChunk PromotionItemWriter ...");
-    }
-
-    @AfterChunk
-    public void afterChunk(){
-        log.info("afterChunk PromotionItemWriter ...");
-    }
-
     @Override
-    public void write(Chunk<? extends Notification> chunk) throws Exception {
+    public void write(Chunk<? extends List<Notification>> chunk) throws Exception {
         log.info("\n\nsaving notifications...");
 
-        for (Notification notification : chunk.getItems()) {
+        for (List<Notification> notifications : chunk.getItems()) {
 
-            log.info("notification={}", notification);
+            log.info("notifications={}", notifications);
 
-            notificationService.sendPromotionNotification(notification);
-
+            for (Notification notification : notifications){
+                log.info("notification={}", notification);
+                notificationService.sendPromotionNotification(notification);
+            }
         }
 
         System.out.println("\ndone sending notification!\n\n");

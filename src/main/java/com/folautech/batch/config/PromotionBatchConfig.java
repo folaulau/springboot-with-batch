@@ -21,7 +21,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -73,11 +76,11 @@ public class PromotionBatchConfig {
 
     @Bean
     public Step sendNotifications(JobRepository jobRepository, PlatformTransactionManager transactionManager,
-                          ItemReader<Promotion> promotionItemReader,
-                          ItemProcessor<Promotion, Notification> notificationItemProcessor,
-                          ItemWriter<Notification> notificationItemWriter) {
+                                  ItemReader<Page<Promotion>> promotionItemReader,
+                                  ItemProcessor<Page<Promotion>, List<Notification>> notificationItemProcessor,
+                                  ItemWriter<List<Notification>> notificationItemWriter) {
         log.info("sendNotifications...");
-        return new StepBuilder("sendNotifications", jobRepository).<Promotion, Notification> chunk(CHUNK_SIZE, transactionManager)
+        return new StepBuilder("sendNotifications", jobRepository).<Page<Promotion>, List<Notification>> chunk(1, transactionManager)
                 .reader(promotionItemReader)
                 .processor(notificationItemProcessor)
                 .transactionManager(transactionManager)

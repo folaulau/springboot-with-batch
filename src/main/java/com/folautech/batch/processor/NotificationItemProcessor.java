@@ -7,13 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.annotation.AfterChunk;
 import org.springframework.batch.core.annotation.BeforeChunk;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
-public class NotificationItemProcessor implements ItemProcessor<Promotion, Notification> {
+public class NotificationItemProcessor implements ItemProcessor<Page<Promotion>, List<Notification>> {
 
     @BeforeChunk
     public void beforeChunk(){
@@ -26,12 +29,23 @@ public class NotificationItemProcessor implements ItemProcessor<Promotion, Notif
     }
 
     @Override
-    public Notification process(Promotion promotion) throws Exception {
-        log.info("processing promotion={}\n\n", promotion.toString());
+    public List<Notification> process(Page<Promotion> promotionPage) throws Exception {
+        log.info("processing promotions={}\n\n", promotionPage.toString());
 
-        return Notification.builder()
-                .user(promotion.getUser())
-                .message("Congratulations! You have been promoted.")
-                .build();
+        if(!promotionPage.hasContent()){
+            return null;
+        }
+
+        List<Notification> notifications = new ArrayList<>();
+
+        for (Promotion promotion : promotionPage.getContent()) {
+            log.info("processing promotion, promotion={}\n\n", promotion.toString());
+            notifications.add(Notification.builder()
+                    .user(promotion.getUser())
+                    .message("Congratulations! You have been promoted.")
+                    .build());
+        }
+
+        return notifications;
     }
 }

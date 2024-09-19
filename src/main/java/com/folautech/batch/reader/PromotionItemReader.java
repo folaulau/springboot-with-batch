@@ -24,31 +24,14 @@ import java.util.Iterator;
 
 @Service
 @Slf4j
-public class PromotionItemReader implements ItemReader<Promotion> {
+public class PromotionItemReader implements ItemReader<Page<Promotion>> {
 
     @Autowired
     private PromotionRepository promotionRepository;
 
     private Iterator<Promotion> promotionIterator;
-    private int pageSize = PromotionBatchConfig.CHUNK_SIZE;
+    private int pageSize = 10;
     private int pageNumber = 0;
-
-    @PostConstruct
-    public void init() {
-        log.info("UserPromotionItemReader initialized");
-    }
-
-    @BeforeChunk
-    public void beforeChunk(){
-        log.info("beforeChunk ... pageNumber: {}, pageSize: {}", pageNumber, pageSize);
-
-        Pageable pageable =
-                PageRequest.of(pageNumber, pageSize, Sort.by("id").ascending());
-
-        Page<Promotion> userPage = promotionRepository.findAll(pageable);
-
-        promotionIterator = userPage.iterator();
-    }
 
     @AfterChunk
     public void afterChunk(){
@@ -57,19 +40,17 @@ public class PromotionItemReader implements ItemReader<Promotion> {
     }
 
     @Override
-    public Promotion read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-        log.info("reading a promotion...");
+    public Page<Promotion> read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+        log.info("reading promotions, pageNumber: {}", pageNumber);
 
-        // Return the next user from the iterator
-        if (promotionIterator.hasNext()) {
-            Promotion promotion = promotionIterator.next();
+        Pageable pageable =
+                PageRequest.of(pageNumber, pageSize, Sort.by("id").ascending());
 
-            log.info("Promotion: {}", promotion);
+        Page<Promotion> userPage = promotionRepository.findAll(pageable);
 
-            return promotion;
-        } else {
-
-            log.info("no more promotion in the iterator!");
+        if(userPage.hasContent()){
+            return userPage;
+        }else {
             return null;
         }
     }
