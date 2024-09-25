@@ -62,6 +62,7 @@ public class CronJobTriggerController {
             }
         } else if (job.equals(CronJobName.PROMOTIONS)) {
             JobParameters jobParameters = new JobParametersBuilder()
+                    .addLong("chunkSize", Long.valueOf(7))
                     .addLong("time", System.currentTimeMillis())
                     .addString("uuid", UUID.randomUUID().toString()).toJobParameters();
 

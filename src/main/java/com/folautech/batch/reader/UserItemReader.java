@@ -5,8 +5,10 @@ import com.folautech.batch.entity.user.User;
 import com.folautech.batch.entity.user.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.AfterChunk;
 import org.springframework.batch.core.annotation.BeforeChunk;
+import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
@@ -32,6 +34,13 @@ public class UserItemReader implements ItemReader<User> {
     private int pageSize = PromotionBatchConfig.CHUNK_SIZE;
     private int pageNumber = 0;
     Random random = null;
+
+    @BeforeStep
+    public void beforeStep(StepExecution stepExecution) {
+        // Access chunk size from step configuration
+        Long chunkSize = stepExecution.getJobParameters().getLong("chunkSize");
+        log.info("Chunk size is: {}", chunkSize);
+    }
 
     @PostConstruct
     public void init() {
